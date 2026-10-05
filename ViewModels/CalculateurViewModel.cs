@@ -3,10 +3,13 @@ namespace CalculateurAge.ViewModels;
 // Contient l'ÉTAT de l'écran et les ACTIONS possibles.
 public class CalculateurViewModel : BaseViewModel
 {
+    private const int AgeMajorite = 18;
+
     // Champs privés : la vraie donnée.
     private string _nom = "";
     private DateTime _dateNaissance = DateTime.Today.AddYears(-20);
     private string _resultat = "";
+    private string _message = "";
     private bool _resultatVisible;
 
     // Propriétés publiques : ce que le XAML voit.
@@ -27,6 +30,13 @@ public class CalculateurViewModel : BaseViewModel
     {
         get => _resultat;
         set => SetField(ref _resultat, value);
+    }
+
+    // Fonctionnalité 1 : "Majeur" ou "Mineur".
+    public string Message
+    {
+        get => _message;
+        set => SetField(ref _message, value);
     }
 
     public bool ResultatVisible
@@ -54,6 +64,7 @@ public class CalculateurViewModel : BaseViewModel
             DateTime.Today.AddYears(-age)) age--;
 
         Resultat = $"{Nom}, vous avez {age} ans";
+        Message = age >= AgeMajorite ? "Majeur" : "Mineur";
         ResultatVisible = true;
     }
 }

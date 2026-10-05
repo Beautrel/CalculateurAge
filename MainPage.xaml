@@ -15,6 +15,9 @@
                     Command="{Binding CalculerCommand}"/>
             <Label Text="{Binding Resultat}" FontSize="20"
                    IsVisible="{Binding ResultatVisible}"/>
+            <Label Text="{Binding Message}" FontSize="18"
+                   FontAttributes="Bold"
+                   IsVisible="{Binding ResultatVisible}"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
