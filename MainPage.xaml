@@ -20,6 +20,8 @@
             <Label Text="{Binding Message}" FontSize="18"
                    FontAttributes="Bold"
                    IsVisible="{Binding ResultatVisible}"/>
+            <Label Text="{Binding MessageAnniversaire}" FontSize="16"
+                   IsVisible="{Binding ResultatVisible}"/>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

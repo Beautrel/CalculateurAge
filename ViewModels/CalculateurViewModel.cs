@@ -10,6 +10,7 @@ public class CalculateurViewModel : BaseViewModel
     private DateTime _dateNaissance = DateParDefaut();
     private string _resultat = "";
     private string _message = "";
+    private string _messageAnniversaire = "";
     private bool _resultatVisible;
 
     // Propriétés publiques : ce que le XAML voit.
@@ -39,6 +40,13 @@ public class CalculateurViewModel : BaseViewModel
         set => SetField(ref _message, value);
     }
 
+    // Fonctionnalité 3 : jours avant le prochain anniversaire.
+    public string MessageAnniversaire
+    {
+        get => _messageAnniversaire;
+        set => SetField(ref _messageAnniversaire, value);
+    }
+
     public bool ResultatVisible
     {
         get => _resultatVisible;
@@ -62,6 +70,27 @@ public class CalculateurViewModel : BaseViewModel
     private static DateTime DateParDefaut()
         => DateTime.Today.AddYears(-20);
 
+    // Date de l'anniversaire dans une année donnée.
+    // Né un 29 février : le 28 février les années non bissextiles.
+    private static DateTime AnniversaireEn(int annee, DateTime naissance)
+    {
+        int jour = naissance.Day;
+        if (naissance.Month == 2 && naissance.Day == 29
+            && !DateTime.IsLeapYear(annee))
+            jour = 28;
+        return new DateTime(annee, naissance.Month, jour);
+    }
+
+    // Nombre de jours avant le prochain anniversaire (0 = aujourd'hui).
+    private static int JoursAvantAnniversaire(DateTime naissance)
+    {
+        DateTime aujourdhui = DateTime.Today;
+        DateTime prochain = AnniversaireEn(aujourdhui.Year, naissance);
+        if (prochain < aujourdhui)
+            prochain = AnniversaireEn(aujourdhui.Year + 1, naissance);
+        return (prochain - aujourdhui).Days;
+    }
+
     // La logique métier : aucun contrôle d'interface ici.
     private void Calculer()
     {
@@ -72,6 +101,12 @@ public class CalculateurViewModel : BaseViewModel
 
         Resultat = $"{Nom}, vous avez {age} ans";
         Message = age >= AgeMajorite ? "Majeur" : "Mineur";
+
+        int jours = JoursAvantAnniversaire(DateNaissance);
+        MessageAnniversaire = jours == 0
+            ? "Joyeux anniversaire !"
+            : $"Prochain anniversaire dans {jours} jour(s)";
+
         ResultatVisible = true;
     }
 
@@ -82,6 +117,7 @@ public class CalculateurViewModel : BaseViewModel
         DateNaissance = DateParDefaut();
         Resultat = "";
         Message = "";
+        MessageAnniversaire = "";
         ResultatVisible = false;
     }
 }
