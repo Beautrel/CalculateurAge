@@ -7,7 +7,7 @@ public class CalculateurViewModel : BaseViewModel
 
     // Champs privés : la vraie donnée.
     private string _nom = "";
-    private DateTime _dateNaissance = DateTime.Today.AddYears(-20);
+    private DateTime _dateNaissance = DateParDefaut();
     private string _resultat = "";
     private string _message = "";
     private bool _resultatVisible;
@@ -45,15 +45,22 @@ public class CalculateurViewModel : BaseViewModel
         set => SetField(ref _resultatVisible, value);
     }
 
-    // Lié à Button.Command dans le XAML.
+    // Liées à Button.Command dans le XAML.
     public RelayCommand CalculerCommand { get; }
+    public RelayCommand EffacerCommand { get; }
 
     public CalculateurViewModel()
     {
         CalculerCommand = new RelayCommand(
             Calculer,
             () => !string.IsNullOrWhiteSpace(Nom));
+
+        // Fonctionnalité 2 : toujours disponible.
+        EffacerCommand = new RelayCommand(Effacer);
     }
+
+    private static DateTime DateParDefaut()
+        => DateTime.Today.AddYears(-20);
 
     // La logique métier : aucun contrôle d'interface ici.
     private void Calculer()
@@ -66,5 +73,15 @@ public class CalculateurViewModel : BaseViewModel
         Resultat = $"{Nom}, vous avez {age} ans";
         Message = age >= AgeMajorite ? "Majeur" : "Mineur";
         ResultatVisible = true;
+    }
+
+    // Remet tous les champs à zéro.
+    private void Effacer()
+    {
+        Nom = "";   // regrise aussi le bouton Calculer
+        DateNaissance = DateParDefaut();
+        Resultat = "";
+        Message = "";
+        ResultatVisible = false;
     }
 }
